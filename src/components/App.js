@@ -1,3 +1,4 @@
+// src/App.js
 import React, { Component } from "react";
 import "../styles/App.css";
 
@@ -7,16 +8,17 @@ class App extends Component {
     this.state = {
       name1: "",
       name2: "",
-      answer: "",
+      answer: "", // h3 will render even when this is empty
     };
   }
 
-  normalize = (str) => str.replace(/\s+/g, "");
+  // remove spaces only (keep case-sensitivity)
+  normalize = (s) => s.replace(/\s+/g, "");
 
+  // Remove common letters between s1 and s2 respecting counts
   removeCommons = (s1, s2) => {
     const arr1 = s1.split("");
     const arr2 = s2.split("");
-
     let i = 0;
     while (i < arr1.length) {
       const ch = arr1[i];
@@ -35,6 +37,7 @@ class App extends Component {
     e.preventDefault();
     const { name1, name2 } = this.state;
 
+    // Validation: non-empty after trimming
     if (!name1.trim() || !name2.trim()) {
       this.setState({ answer: "Please Enter valid input" });
       return;
@@ -61,56 +64,62 @@ class App extends Component {
       0: "Siblings",
     };
 
-    const relation = relationMap[mod];
-    this.setState({ answer: relation });
+    this.setState({ answer: relationMap[mod] });
   };
 
   handleClear = () => {
-    this.setState({
-      name1: "",
-      name2: "",
-      answer: "",
-    });
+    this.setState({ name1: "", name2: "", answer: "" });
   };
 
   render() {
     return (
       <div id="main">
         {/* Do not remove the main div */}
-        <div style={{ marginBottom: "10px" }}>
-          <input
-            data-testid="input1"
-            name="name1"
-            placeholder="Enter first name"
-            value={this.state.name1}
-            onChange={(e) => this.setState({ name1: e.target.value })}
-          />
-          <input
-            data-testid="input2"
-            name="name2"
-            placeholder="Enter second name"
-            style={{ marginLeft: "8px" }}
-            value={this.state.name2}
-            onChange={(e) => this.setState({ name2: e.target.value })}
-          />
-          <button
-            data-testid="calculate_relationship"
-            name="calculate_relationship"
-            style={{ marginLeft: "8px" }}
-            onClick={this.handleCalculate}
-          >
-            Calculate Relationship Future
-          </button>
-          <button
-            data-testid="clear"
-            name="clear"
-            style={{ marginLeft: "8px" }}
-            onClick={this.handleClear}
-          >
-            Clear
-          </button>
-        </div>
 
+        {/* input 1 */}
+        <input
+          type="text"
+          data-testid="input1"
+          name="name1"
+          value={this.state.name1}
+          onChange={(e) => this.setState({ name1: e.target.value })}
+          placeholder="First name"
+        />
+
+        {/* input 2 */}
+        <input
+          type="text"
+          data-testid="input2"
+          name="name2"
+          value={this.state.name2}
+          onChange={(e) => this.setState({ name2: e.target.value })}
+          placeholder="Second name"
+          style={{ marginLeft: 8 }}
+        />
+
+        {/* calculate button */}
+        <button
+          type="button"
+          data-testid="calculate_relationship"
+          name="calculate_relationship"
+          onClick={this.handleCalculate}
+          style={{ marginLeft: 8 }}
+        >
+          Calculate Relationship Future
+        </button>
+
+        {/* clear button */}
+        <button
+          type="button"
+          data-testid="clear"
+          name="clear"
+          onClick={this.handleClear}
+          style={{ marginLeft: 8 }}
+        >
+          Clear
+        </button>
+
+        {/* result - must exist for tests */}
         <h3 data-testid="answer">{this.state.answer}</h3>
       </div>
     );
