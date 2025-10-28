@@ -1,96 +1,87 @@
-// src/App.js
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { name1: "", name2: "", answer: "" };
-  }
+function App() {
+  const [name1, setName1] = useState("");
+  const [name2, setName2] = useState("");
+  const [result, setResult] = useState("");
 
-  normalize = (s) => s.replace(/\s+/g, "");
+  const calculateFlames = () => {
+    if (name1.trim() === "" || name2.trim() === "") {
+      setResult("Please Enter valid input");
+      return;
+    }
 
-  removeCommons = (s1, s2) => {
-    const a1 = s1.split("");
-    const a2 = s2.split("");
-    let i = 0;
-    while (i < a1.length) {
-      const ch = a1[i];
-      const idx = a2.indexOf(ch);
-      if (idx !== -1) {
-        a1.splice(i, 1);
-        a2.splice(idx, 1);
-      } else {
-        i++;
+    let arr1 = name1.split("");
+    let arr2 = name2.split("");
+
+    // remove common letters (case-sensitive)
+    for (let i = 0; i < arr1.length; i++) {
+      const index = arr2.indexOf(arr1[i]);
+      if (index !== -1) {
+        arr1.splice(i, 1);
+        arr2.splice(index, 1);
+        i--;
       }
     }
-    return [a1.join(""), a2.join("")];
+
+    const total = arr1.length + arr2.length;
+    const remainder = total % 6;
+
+    const flamesMap = {
+      1: "Friends",
+      2: "Love",
+      3: "Affection",
+      4: "Marriage",
+      5: "Enemy",
+      0: "Siblings",
+    };
+
+    setResult(flamesMap[remainder]);
   };
 
-  handleCalculate = (e) => {
-    e.preventDefault();
-    const { name1, name2 } = this.state;
-    if (!name1.trim() || !name2.trim()) {
-      this.setState({ answer: "Please Enter valid input" });
-      return;
-    }
-    const s1 = this.normalize(name1);
-    const s2 = this.normalize(name2);
-    if (!s1.length || !s2.length) {
-      this.setState({ answer: "Please Enter valid input" });
-      return;
-    }
-    const [r1, r2] = this.removeCommons(s1, s2);
-    const mod = (r1.length + r2.length) % 6;
-    const map = { 1: "Friends", 2: "Love", 3: "Affection", 4: "Marriage", 5: "Enemy", 0: "Siblings" };
-    this.setState({ answer: map[mod] });
+  const clearAll = () => {
+    setName1("");
+    setName2("");
+    setResult("");
   };
 
-  handleClear = () => this.setState({ name1: "", name2: "", answer: "" });
+  return (
+    <div>
+      <h1>FLAMES App</h1>
 
-  render() {
-    return (
-      <div id="main">
-        {/* Required inputs/buttons/h3 with exact attributes tests expect */}
-        <input
-          type="text"
-          data-testid="input1"
-          name="name1"
-          value={this.state.name1}
-          onChange={(e) => this.setState({ name1: e.target.value })}
-          placeholder="First name"
-        />
+      <input
+        type="text"
+        data-testid="input1"
+        name="name1"
+        value={name1}
+        onChange={(e) => setName1(e.target.value)}
+        placeholder="First Name"
+      />
 
-        <input
-          type="text"
-          data-testid="input2"
-          name="name2"
-          value={this.state.name2}
-          onChange={(e) => this.setState({ name2: e.target.value })}
-          placeholder="Second name"
-        />
+      <input
+        type="text"
+        data-testid="input2"
+        name="name2"
+        value={name2}
+        onChange={(e) => setName2(e.target.value)}
+        placeholder="Second Name"
+      />
 
-        <button
-          type="button"
-          data-testid="calculate_relationship"
-          name="calculate_relationship"
-          onClick={this.handleCalculate}
-        >
-          Calculate Relationship Future
-        </button>
+      <button
+        data-testid="calculate_relationship"
+        name="calculate_relationship"
+        onClick={calculateFlames}
+      >
+        Calculate Relationship Future
+      </button>
 
-        <button
-          type="button"
-          data-testid="clear"
-          name="clear"
-          onClick={this.handleClear}
-        >
-          Clear
-        </button>
+      <button data-testid="clear" name="clear" onClick={clearAll}>
+        Clear
+      </button>
 
-        <h3 data-testid="answer">{this.state.answer}</h3>
-      </div>
-    );
-  }
+      <h3 data-testid="answer">{result}</h3>
+    </div>
+  );
 }
 
 export default App;
