@@ -11,23 +11,21 @@ function App() {
       return;
     }
 
-    let arr1 = name1.split("");
-    let arr2 = name2.split("");
+    const arr1 = name1.split("");
+    const arr2 = name2.split("");
 
-    // remove common letters (case-sensitive)
     for (let i = 0; i < arr1.length; i++) {
-      const index = arr2.indexOf(arr1[i]);
-      if (index !== -1) {
+      const idx = arr2.indexOf(arr1[i]);
+      if (idx !== -1) {
         arr1.splice(i, 1);
-        arr2.splice(index, 1);
+        arr2.splice(idx, 1);
         i--;
       }
     }
 
     const total = arr1.length + arr2.length;
-    const remainder = total % 6;
-
-    const flamesMap = {
+    const rem = total % 6;
+    const map = {
       1: "Friends",
       2: "Love",
       3: "Affection",
@@ -36,7 +34,7 @@ function App() {
       0: "Siblings",
     };
 
-    setResult(flamesMap[remainder]);
+    setResult(map[rem]);
   };
 
   const clearAll = () => {
@@ -68,6 +66,7 @@ function App() {
       />
 
       <button
+        type="button"
         data-testid="calculate_relationship"
         name="calculate_relationship"
         onClick={calculateFlames}
@@ -75,7 +74,12 @@ function App() {
         Calculate Relationship Future
       </button>
 
-      <button data-testid="clear" name="clear" onClick={clearAll}>
+      <button
+        type="button"
+        data-testid="clear"
+        name="clear"
+        onClick={clearAll}
+      >
         Clear
       </button>
 
