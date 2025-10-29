@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useState } from "react";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       return;
     }
 
+    // Use arrays to remove matched characters one-for-one (case sensitive)
     const arr1 = name1.split("");
     const arr2 = name2.split("");
 
@@ -19,7 +21,7 @@ function App() {
       if (idx !== -1) {
         arr1.splice(i, 1);
         arr2.splice(idx, 1);
-        i--;
+        i--; // step back to check the shifted element
       }
     }
 
@@ -44,47 +46,68 @@ function App() {
   };
 
   return (
-    <div>
+    // Outer wrapper ensures page always has these elements
+    <main style={{ padding: 24, fontFamily: "system-ui, Arial" }}>
       <h1>FLAMES App</h1>
 
-      <input
-        type="text"
-        data-testid="input1"
-        name="name1"
-        value={name1}
-        onChange={(e) => setName1(e.target.value)}
-        placeholder="First Name"
-      />
+      {/* First input: has name="name1" and data-testid="input1" */}
+      <div style={{ marginBottom: 12 }}>
+        <label htmlFor="name1">First Name</label>
+        <input
+          id="name1"
+          type="text"
+          data-testid="input1"
+          name="name1"
+          value={name1}
+          onChange={(e) => setName1(e.target.value)}
+          placeholder="First Name"
+          style={{ display: "block", padding: 8, marginTop: 6 }}
+        />
+      </div>
 
-      <input
-        type="text"
-        data-testid="input2"
-        name="name2"
-        value={name2}
-        onChange={(e) => setName2(e.target.value)}
-        placeholder="Second Name"
-      />
+      {/* Second input: has name="name2" and data-testid="input2" */}
+      <div style={{ marginBottom: 12 }}>
+        <label htmlFor="name2">Second Name</label>
+        <input
+          id="name2"
+          type="text"
+          data-testid="input2"
+          name="name2"
+          value={name2}
+          onChange={(e) => setName2(e.target.value)}
+          placeholder="Second Name"
+          style={{ display: "block", padding: 8, marginTop: 6 }}
+        />
+      </div>
 
-      <button
-        type="button"
-        data-testid="calculate_relationship"
-        name="calculate_relationship"
-        onClick={calculateFlames}
-      >
-        Calculate Relationship Future
-      </button>
+      {/* Buttons: two buttons exist (Cypress checks for button existence) */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <button
+          type="button"
+          data-testid="calculate_relationship"
+          name="calculate_relationship"
+          onClick={calculateFlames}
+        >
+          Calculate Relationship Future
+        </button>
 
-      <button
-        type="button"
-        data-testid="clear"
-        name="clear"
-        onClick={clearAll}
-      >
-        Clear
-      </button>
+        <button
+          type="button"
+          data-testid="clear"
+          name="clear"
+          onClick={clearAll}
+        >
+          Clear
+        </button>
+      </div>
 
-      <h3 data-testid="answer">{result}</h3>
-    </div>
+      {/* Result area: h3 with data-testid="answer" */}
+      <div>
+        <h3 data-testid="answer" aria-live="polite">
+          {result}
+        </h3>
+      </div>
+    </main>
   );
 }
 
